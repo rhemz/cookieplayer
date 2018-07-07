@@ -94,7 +94,8 @@ class BakeberryStrategy extends GardeningStrategy {
         }
 
         if (this.shouldHarvest()) {
-            console.log('HARVEST!');
+
+            console.log('HARVEST! - ' + this.state.active_buffs_str);
             this.harvestPlants(true); // replant after harvesting
         }
     }
@@ -104,12 +105,16 @@ class BakeberryStrategy extends GardeningStrategy {
             return false;
         }
 
+        // console.log('harvest triggered: ' + this.harvest_triggered);
+        // console.log('frenzy: ' + this.state.frenzy_regular);
+        // console.log('elder frenzy: ' + this.state.frenzy_elder);
+        // console.log('building buffed: ' + this.state.building_buffed);
+
         // lenient
         if ( ( 
             (this.state.frenzy_elder && this.state.frenzy_regular) || 
             (this.state.frenzy_regular && this.state.building_buffed) ||
             (this.state.frenzy_elder && this.state.building_buffed) ) && !this.harvest_triggered) {
-
             return true;
         }
 
@@ -117,7 +122,6 @@ class BakeberryStrategy extends GardeningStrategy {
         if ( ( 
             (this.state.frenzy_elder && this.state.frenzy_regular) || 
             (this.state.frenzy_elder && this.state.building_buffed) ) && !this.harvest_triggered) {
-
             return true;
         }
 

@@ -19,7 +19,7 @@ class GameState {
         // buffs
         this.clotted = null;
         this.num_total_buffs = null;
-        this.buliding_buffed = null;
+        this.building_buffed = null;
         this.num_building_buffs = null;
         this.active_buffs_str = null;
 
@@ -48,7 +48,7 @@ class GameState {
         // buffs
         this.num_total_buffs = 0;
         this.num_building_buffs = 0;
-        this.buliding_buffed = false;
+        this.building_buffed = false;
         this.tr_building_buffs = 0;
         this.active_buffs_str = '';
         for (var key in this.game.buffs) {
@@ -57,7 +57,7 @@ class GameState {
             this.num_total_buffs++;
 
             if (buff.type.id == 9) {
-                this.buliding_buffed = true;
+                this.building_buffed = true;
                 this.num_building_buffs++;
                 this.tr_building_buffs += (buff.time + 1000 / 1000 * this.game.fps);
             }
