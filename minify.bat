@@ -1,3 +1,3 @@
-rm autodawgz.js
+rm cookieplayer_min.js
 
-minify -o autodawgz.js --match=\.js strategy.js strategies/ main.js
+minify -o cookieplayer_min.js --match=\.js strategy.js strategies/ main.js
