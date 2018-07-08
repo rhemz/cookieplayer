@@ -9,15 +9,15 @@ setSoil(soil_id){if(this.g.soil!=soil_id){console.log('setting soil to: '+soil_i
 document.getElementById('gardenSoil-'+soil_id.toString()).className='gardenSeed gardenSoil on';}}
 freezeGarden(){if(this.g.freeze!=1&&!this.harvest_triggered){this.g.freeze=1;document.getElementById('gardenTool-2').className='gardenSeed on';}}
 unfreezeGarden(){if(this.g.freeze!=0){this.g.freeze=0;document.getElementById('gardenTool-2').className='gardenSeed';}}}
-class BakeberryStrategy extends GardeningStrategy{constructor(state){super(state);this.mission='Bakeberry gardener';this.bb_id=8;this.m=this.state.grimoire;}
+class BakeberryStrategy extends GardeningStrategy{constructor(state){super(state);this.mission='Bakeberry gardener';this.bb_id=8;this.m=this.state.grimoire;this.cookies_at_harvest=0;this.cookies_last_harvest=0;}
 actionPlan(){if(this.state.all_plants_mature){this.setSoil(this.soil_clay);this.freezeGarden();if((this.state.frenzy_regular&&!this.state.frenzy_elder)||(this.state.frenzy_elder&&!this.state.frenzy_regular)||(this.state.frenzy_regular&&!this.state.building_buffed)||(this.state.frenzy_elder&&!this.state.building_buffed)||(this.state.building_buffed&&!this.state.frenzy_elder)||(this.state.building_buffed&&!this.state.frenzy_regular)){this.tryCastHof();}}
 if(this.shouldHarvest()){console.log('HARVEST! - '+this.state.active_buffs_str);this.harvestPlants(true);}}
 shouldHarvest(){if(!this.state.all_plants_mature||this.state.clotted||this.harvest_triggered){return false;}
 if(((this.state.frenzy_elder&&this.state.frenzy_regular)||(this.state.frenzy_regular&&this.state.building_buffed)||(this.state.frenzy_elder&&this.state.building_buffed))&&!this.harvest_triggered){return true;}
 if(((this.state.frenzy_elder&&this.state.frenzy_regular)||(this.state.frenzy_elder&&this.state.building_buffed))&&!this.harvest_triggered){return true;}
 return false;}
-harvestPlants(replant){this.harvest_triggered=true;this.unfreezeGarden();setTimeout(function(){console.log('harvest triggering buying GS');if(!this.state.game.Upgrades['Golden switch [off]'].bought){console.log('buying gs');this.state.game.Upgrades['Golden switch [off]'].buy();}
-setTimeout(function(){this.unfreezeGarden();this.g.harvestAll();this.harvest_triggered=false;setTimeout(function(){if(!this.state.game.Upgrades['Golden switch [on]'].bought){console.log('waited, unbuying gs');this.state.game.Upgrades['Golden switch [on]'].buy();}
+harvestPlants(replant){this.harvest_triggered=true;this.cookies_at_harvest=this.state.game.cookies;this.unfreezeGarden();setTimeout(function(){console.log('harvest triggering buying GS');if(!this.state.game.Upgrades['Golden switch [off]'].bought){console.log('buying gs');this.state.game.Upgrades['Golden switch [off]'].buy();}
+setTimeout(function(){this.unfreezeGarden();this.g.harvestAll();this.harvest_triggered=false;this.cookies_last_harvest=this.state.game.cookies-this.cookies_at_harvest;console.log('Harvested for '+BeautifyInText(this.cookies_last_harvest.toString())+' cookies');setTimeout(function(){if(!this.state.game.Upgrades['Golden switch [on]'].bought){console.log('waited, unbuying gs');this.state.game.Upgrades['Golden switch [on]'].buy();}
 this.setSoil(this.soil_fertilizer);if(replant){setTimeout(function(){this.plantAll(this.bb_id);}.bind(this),(3*1000));}}.bind(this),(3.3*60*1000));}.bind(this),1005);console.log('done harvesting');}.bind(this),1005);}
 tryCastHof(){var hof=this.m.spells['hand of fate'];if(this.haveEnoughMana(hof)&&!this.harvest_triggered){console.log('conditions met, casting HOF');this.m.castSpell(hof);return true;}
 return false;}

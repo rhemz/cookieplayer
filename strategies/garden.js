@@ -69,6 +69,9 @@ class BakeberryStrategy extends GardeningStrategy {
         this.mission = 'Bakeberry gardener';
         this.bb_id = 8;
         this.m = this.state.grimoire;
+
+        this.cookies_at_harvest = 0;
+        this.cookies_last_harvest = 0;
     }
 
     actionPlan() {
@@ -86,7 +89,8 @@ class BakeberryStrategy extends GardeningStrategy {
                 (this.state.frenzy_regular && !this.state.building_buffed) || 
                 (this.state.frenzy_elder && !this.state.building_buffed) || 
                 (this.state.building_buffed && !this.state.frenzy_elder) || 
-                (this.state.building_buffed && !this.state.frenzy_regular)) {
+                (this.state.building_buffed && !this.state.frenzy_regular) ||
+                (this.state.building_buffed && this.state.num_building_buffs == 1) ) {
 
                 // cast hof.  tests if mana is available
                 this.tryCastHof();
@@ -94,7 +98,6 @@ class BakeberryStrategy extends GardeningStrategy {
         }
 
         if (this.shouldHarvest()) {
-
             console.log('HARVEST! - ' + this.state.active_buffs_str);
             this.harvestPlants(true); // replant after harvesting
         }
@@ -114,14 +117,16 @@ class BakeberryStrategy extends GardeningStrategy {
         if ( ( 
             (this.state.frenzy_elder && this.state.frenzy_regular) || 
             (this.state.frenzy_regular && this.state.building_buffed) ||
-            (this.state.frenzy_elder && this.state.building_buffed) ) && !this.harvest_triggered) {
+            (this.state.frenzy_elder && this.state.building_buffed) || 
+            (this.state.num_building_buffs > 1) ) && !this.harvest_triggered) {
             return true;
         }
 
         // big money only
         if ( ( 
             (this.state.frenzy_elder && this.state.frenzy_regular) || 
-            (this.state.frenzy_elder && this.state.building_buffed) ) && !this.harvest_triggered) {
+            (this.state.frenzy_elder && this.state.building_buffed) ||
+            (this.state.num_building_buffs > 1) ) && !this.harvest_triggered) {
             return true;
         }
 
@@ -130,6 +135,7 @@ class BakeberryStrategy extends GardeningStrategy {
 
     harvestPlants(replant) {
         this.harvest_triggered = true;
+        this.cookies_at_harvest = this.state.game.cookies;
 
         // unfreeze garden if frozen
         this.unfreezeGarden();
@@ -149,6 +155,8 @@ class BakeberryStrategy extends GardeningStrategy {
                 // harvest plants
                 this.g.harvestAll();
                 this.harvest_triggered = false;
+                this.cookies_last_harvest = this.state.game.cookies - this.cookies_at_harvest;
+                console.log('Harvested for ' + BeautifyInText(this.cookies_last_harvest.toString()) + ' cookies');
                 
                 // disable gs and re-plant
                 setTimeout(function() { 
