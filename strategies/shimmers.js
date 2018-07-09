@@ -3,6 +3,7 @@ class ShimmerClickStrategy extends Strategy {
     constructor(state) {
         super(state);
         this.mission = 'Click golden/wrath/reindeer cookies';
+        this.enabled = true;
     }
 
 

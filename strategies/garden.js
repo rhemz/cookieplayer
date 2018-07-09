@@ -3,7 +3,8 @@ class GardeningStrategy extends Strategy {
     constructor(state) {
         super(state);
         this.mission = 'Common gardening strategy functionality.  Does nothing.';
-
+        this.enabled = true;
+        
         this.g = this.state.garden;
         this.harvest_triggered = false;
         this.total_earned = 0;

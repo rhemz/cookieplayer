@@ -6,6 +6,7 @@ class Strategy {
     constructor(state) {
         this.state = state;
         this.mission = 'Description of strategic implementation';
+        this.enabled = false;
     }
 
     actionPlan() {

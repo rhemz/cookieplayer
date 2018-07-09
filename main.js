@@ -132,7 +132,9 @@ var cp = setInterval(function() {
     for (var i = 0; i < strategies.length; i++) {
         let strat = strategies[i];
 
-        // invoke strategy actionPlan
-        strat.actionPlan();
+        // invoke strategy actionPlan if the strategy is enabled
+        if (strat.enabled) {
+            strat.actionPlan();
+        }
     }
 }, 500);  // every half-second

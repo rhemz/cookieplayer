@@ -5,6 +5,7 @@ class CookieClickStrategy extends Strategy {
     constructor(state) {
         super(state);
         this.mission = 'Clicka de cookie';
+        this.enabled = true;
     }
 
     actionPlan() {
